@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "wrangler pages dev --compatibility-date=2023-02-05 -- npm vite",
+    "build:watch": "vite build --watch",
+    "dev": "node scripts/dev.js",
     "build": "vite build",
-    "deploy": "npm run build && wrangler pages deploy pages"
+    "deploy": "npm run build && wrangler pages deploy pages",
+    "test": "echo 'No tests for pages-stack. Run: npm -w pages-stack run dev  # then open http://localhost:8787/' && exit 0"
   },
   "license": "MIT",
   "devDependencies": {
@@ -21,5 +23,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zod": "^3.22.4"
-  }
+  },
+  "test": "echo 'No tests for pages-stack. Run: npm -w pages-stack run dev  # then open http://localhost:8787/' && exit 0"
 }
