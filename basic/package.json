@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
+    "dev": "wrangler dev src/index.ts --local",
     "deploy": "wrangler deploy src/index.ts",
     "test": "vitest --run"
   },
