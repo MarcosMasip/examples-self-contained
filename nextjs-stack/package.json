@@ -4,7 +4,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "echo 'No tests for nextjs-stack. Run: npm -w nextjs-stack run dev  # then open http://localhost:3000' && exit 0"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.1",
