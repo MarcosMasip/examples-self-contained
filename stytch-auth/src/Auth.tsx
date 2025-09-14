@@ -1,6 +1,8 @@
-import {OAuthProviders, OTPMethods, Products, StytchEvent, StytchLoginConfig} from "@stytch/vanilla-js";
-import {IdentityProvider, StytchLogin, useStytch, useStytchUser} from "@stytch/react";
-import {useEffect, useMemo} from "react";
+import { StytchLogin, useStytch, useStytchUser } from "@stytch/react";
+import { OAuthProviders, OTPMethods, Products, StytchEvent, StytchLoginConfig } from "@stytch/vanilla-js";
+import { useEffect, useMemo } from "react";
+
+const MOCK_MODE = !import.meta.env.VITE_STYTCH_PUBLIC_TOKEN
 
 /**
  * A higher-order component that enforces a login requirement for the wrapped component.
@@ -8,19 +10,19 @@ import {useEffect, useMemo} from "react";
  * current URL is stored in localStorage to enable return after authentication.
  */
 export const withLoginRequired = (Component: React.FC) => () => {
+    if (MOCK_MODE) {
+        // In mock mode, no auth required
+        return <Component />
+    }
     const {user, fromCache} = useStytchUser()
-
     useEffect(() => {
         if (!user && !fromCache) {
             localStorage.setItem('returnTo', window.location.href);
             window.location.href = '/login';
         }
     }, [user, fromCache])
-
-    if (!user) {
-        return null
-    }
-    return <Component/>
+    if (!user) return null
+    return <Component />
 }
 
 /**
@@ -46,6 +48,17 @@ const onLoginComplete = () => {
  * View all configuration options at https://stytch.com/docs/sdks/ui-configuration
  */
 export function Login() {
+    if (MOCK_MODE) {
+        return (
+            <div>
+                <p>Mock login mode enabled (no Stytch credentials found).</p>
+                <button onClick={() => {
+                    localStorage.setItem('returnTo', window.location.href);
+                    window.location.href = '/authenticate'
+                }}>Continue</button>
+            </div>
+        )
+    }
     const loginConfig = useMemo<StytchLoginConfig>(() => ({
         products: [Products.otp, Products.oauth],
         otpOptions: {
@@ -73,31 +86,27 @@ export function Login() {
  * The Authentication callback page implementation. Handles completing the login flow after OAuth
  */
 export function Authenticate() {
+    if (MOCK_MODE) {
+        useEffect(() => {
+            // Simulate an auth completion
+            onLoginComplete()
+        }, [])
+        return <>Authenticating (mock)...</>
+    }
     const client = useStytch();
-
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
         if (!token) return;
-
-        client.oauth.authenticate(token, {session_duration_minutes: 60})
-            .then(onLoginComplete)
+        client.oauth.authenticate(token, {session_duration_minutes: 60}).then(onLoginComplete)
     }, [client]);
-
-    return (
-        <>
-            Loading...
-        </>
-    )
+    return <>Loading...</>
 }
 
 export const Logout = function () {
+    if (MOCK_MODE) return null
     const stytch = useStytch()
     const {user} = useStytchUser()
-
-    if (!user) return null;
-
-    return (
-        <button className="primary" onClick={() => stytch.session.revoke()}> Log Out </button>
-    )
+    if (!user) return null
+    return <button className="primary" onClick={() => stytch.session.revoke()}> Log Out </button>
 }

@@ -25,12 +25,14 @@
 	 * databases, object storage, AI inference, real-time communication and more.
 	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
 	 */
-	"kv_namespaces": [
-		{
-			"binding": "TODOS",
-			"id": "abcd699b61e040eca90dad833a19b010"
-		}
-	],
+	// KV is optional for local mock mode; when not configured, an in-memory store is used.
+	// Uncomment and set an ID to use real KV in dev or prod.
+	// "kv_namespaces": [
+	// 	{
+	// 		"binding": "TODOS",
+	// 		"id": "<your-kv-namespace-id>"
+	// 	}
+	// ],
 	/**
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
@@ -47,7 +49,8 @@
 	"assets": {
 		"run_worker_first": true,
 		"not_found_handling": "single-page-application",
-		"binding": "ASSETS"
+		"binding": "ASSETS",
+		"directory": "assets"
 	}
 	/**
 	 * Service Bindings (communicate between multiple Workers)

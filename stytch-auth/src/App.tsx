@@ -1,17 +1,24 @@
-import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
-import {StytchUIClient} from '@stytch/vanilla-js';
-import {StytchProvider} from '@stytch/react';
+import { StytchProvider } from '@stytch/react';
+import { StytchUIClient } from '@stytch/vanilla-js';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
-import {Authenticate, Login, Logout} from "./Auth";
+import { Authenticate, Login, Logout } from "./Auth";
 import TodoEditor from "./Todos";
 
-const stytch = new StytchUIClient(import.meta.env.VITE_STYTCH_PUBLIC_TOKEN ?? '');
+const PUBLIC_TOKEN = import.meta.env.VITE_STYTCH_PUBLIC_TOKEN as string | undefined
+const MOCK_MODE = !PUBLIC_TOKEN
+const stytch = PUBLIC_TOKEN ? new StytchUIClient(PUBLIC_TOKEN) : undefined
 
 function App() {
-    return (
-        <StytchProvider stytch={stytch}>
+    const content = (
+        <>
             <main>
                 <h1>TODO App Demo</h1>
+                {MOCK_MODE && (
+                    <p style={{ background: '#fff3cd', color: '#664d03', padding: '.5rem .75rem', borderRadius: 8 }}>
+                        Mock auth mode: no Stytch credentials detected. Login is bypassed for local demo.
+                    </p>
+                )}
                 <Router>
                     <Routes>
                         <Route path="/login" element={<Login/>}/>
@@ -24,8 +31,12 @@ function App() {
             <footer>
                 <Logout/>
             </footer>
-        </StytchProvider>
+        </>
     )
+    if (stytch) {
+        return <StytchProvider stytch={stytch}>{content}</StytchProvider>
+    }
+    return content
 }
 
 export default App

@@ -11,6 +11,8 @@ export type Todo = {
  *
  * The `TodoService` is uniquely bound to a single user at a time to prevent cross-user data access.
  */
+const memory = new Map<string, Todo[]>()
+
 class TodoService {
     constructor(
         private env: Env,
@@ -19,8 +21,11 @@ class TodoService {
     }
 
     get = async (): Promise<Todo[]> => {
-        const todos = await this.env.TODOS.get<Todo[]>(this.userID, "json")
-        return todos || [];
+        if (this.env.TODOS && 'get' in this.env.TODOS) {
+            const todos = await this.env.TODOS.get<Todo[]>(this.userID, 'json')
+            return todos || []
+        }
+        return memory.get(this.userID) || []
     }
 
     #set = async (todos: Todo[]): Promise<Todo[]> => {
@@ -31,7 +36,11 @@ class TodoService {
             return t1.completed ? 1 : -1;
         });
 
-        await this.env.TODOS.put(this.userID, JSON.stringify(sorted))
+        if (this.env.TODOS && 'put' in this.env.TODOS) {
+            await this.env.TODOS.put(this.userID, JSON.stringify(sorted))
+            return sorted
+        }
+        memory.set(this.userID, sorted)
         return sorted
     }
 

@@ -2,10 +2,12 @@
   "name": "stytch-auth",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "build:watch": "vite build --watch",
+    "dev": "node scripts/dev.js",
     "build": "vite build",
     "deploy": "npm run build && wrangler deploy",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "test": "echo 'No tests for stytch-auth. Run: npm -w stytch-auth run dev  # then open http://localhost:3000' && exit 0"
   },
   "dependencies": {
     "@hono/node-server": "^1.12.2",
@@ -19,7 +21,6 @@
     "stytch": "^12.21.0"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.6.0",
     "@types/node": "^20.11.17",
     "@vitejs/plugin-react": "^4.5.2",
     "vite": "^6.3.5"

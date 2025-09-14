@@ -1,12 +1,13 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-
-import { cloudflare } from "@cloudflare/vite-plugin";
+import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  server: {
-    port: 3000
+  build: {
+    outDir: './assets',
+    emptyOutDir: true,
+    sourcemap: false,
+    minify: true,
   },
-  plugins: [react(), cloudflare()],
+  plugins: [react()],
 })
