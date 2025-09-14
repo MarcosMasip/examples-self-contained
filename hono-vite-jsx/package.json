@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --mode client && vite build"
+    "build": "vite build --mode client && vite build",
+    "test": "echo 'No tests for hono-vite-jsx. Run: npm -w hono-vite-jsx run dev  # then open http://localhost:5173/' && exit 0"
   },
   "dependencies": {
     "@hono/node-server": "^1.12.2",

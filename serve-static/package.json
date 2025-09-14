@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy src/index.ts"
+    "dev": "wrangler dev --local src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "test": "echo 'No tests for serve-static. Run: npm -w serve-static run dev  # then open http://localhost:8787/' && exit 0"
   },
   "license": "MIT",
   "dependencies": {

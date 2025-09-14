@@ -1,4 +1,4 @@
-name = "hono-example-basic"
+name = "serve-static"
 compatibility_date = "2024-09-19"
 
 assets = { directory = "./assets/" }

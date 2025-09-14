@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "wrangler dev --live-reload src/index.tsx",
-    "deploy": "wrangler deploy src/index.tsx"
+    "deploy": "wrangler deploy src/index.tsx",
+    "test": "echo 'No tests for jsx-ssr. Run: npm -w jsx-ssr run dev  # then open http://localhost:8787/' && exit 0"
   },
   "license": "MIT",
   "dependencies": {

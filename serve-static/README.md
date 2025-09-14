@@ -1,13 +1,38 @@
-# Hono static file example for Cloudflare Workers
+# Serve static files with Hono + Cloudflare Workers (Self‑contained)
 
-This example demonstrates how to serve static files using Cloudflare Workers. Please learn more in the [Hono documentation](https://hono.dev/docs/getting-started/cloudflare-workers#serve-static-files) and [Cloudflare Workers documentation](https://developers.cloudflare.com/workers/static-assets/binding/#directory).
+This example serves files from the `assets/` directory using Cloudflare Workers’ static assets binding, alongside a small Hono app with an interactive landing page.
 
-Before you can start publishing your service to cloudflare worker, you must sign up for a Cloudflare Workers account first, you can check out this [document](https://developers.cloudflare.com/workers/get-started/guide)
+Learn more:
+- Hono docs: https://hono.dev/docs/getting-started/cloudflare-workers#serve-static-files
+- Cloudflare Workers static assets: https://developers.cloudflare.com/workers/static-assets/binding/#directory
 
-You can update the information (`name`, `zone_id`, etc) in wrangler file, then you can test and deploy your service by simply doing,
+## Quickstart (one command)
 
-```txt
+From the repo root:
+
+```bash
 npm install
-npm run dev # Start a local server for developing your worker
-npm run deploy # Publish your worker to the orange cloud
+npm -w serve-static run dev
+```
+
+Open http://localhost:8787/
+
+On the page, click the buttons to fetch and display:
+- /my-file.txt
+- /folder/nested-file.txt
+- /missing.txt (404 demo)
+
+You can also click the direct links.
+
+## How it works
+
+- `wrangler.toml` sets `assets = { directory = "./assets/" }` to serve static files.
+- `src/index.ts` renders a small UI that fetches those assets and shows the HTTP status and body inline.
+
+## Deploy
+
+Update `wrangler.toml` if you want to change the Worker name. Then deploy:
+
+```bash
+npm -w serve-static run deploy
 ```
