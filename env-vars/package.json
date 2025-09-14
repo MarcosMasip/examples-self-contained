@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "test": "echo 'No tests for env-vars. Run: npm -w env-vars run dev  # then open http://localhost:8787/' && exit 0"
   },
   "license": "MIT",
   "packageManager": "npm@10.0.0",
