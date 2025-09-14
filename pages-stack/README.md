@@ -1,6 +1,6 @@
-# Hono + Cloudflare Pages + React (Self‑contained)
+# Cloudflare Pages + Hono API + React (self-contained)
 
-This example shows a Pages Functions API (Hono + Zod) and a Vite React client, running locally with a single command.
+This example pairs a Cloudflare Pages Functions API (Hono + Zod) with a Vite React client. It runs locally with one command on a stable URL and needs no secrets.
 
 ## Quickstart (one command)
 
@@ -10,23 +10,33 @@ From the repo root:
 npm -w pages-stack run dev
 ```
 
-What starts:
-- Vite dev server on http://localhost:5173/
-- Wrangler Pages dev server on http://localhost:8787/ (proxying to Vite)
+What this does:
+- Builds the client with Vite in watch mode to `./pages`
+- Starts Wrangler Pages dev serving `./pages` plus Functions at a stable URL
+- Auto-opens your browser to the app
 
-Open http://localhost:8787/
+App URL: http://localhost:8787/
 
-On the page:
-- It loads the React app from the built output
-- Initially calls `GET /api/hello?name=Pages` and renders the greeting
-- Try typing a different name and click “Call API” to invoke the function and update the message
+Tip: You can change the port by setting `PORT`, e.g. `PORT=8788 npm -w pages-stack run dev`.
+
+## Try it
+
+When the page opens:
+- It immediately calls `GET /api/hello?name=Pages` and shows the greeting
+- Type another name and click “Call API” to invoke the function and update the message
+
+Files to peek:
+- `src/App.tsx` — React UI using `hc()` (Hono client) to call the API
+- `functions/api/[[route]].ts` — Hono route with Zod validation (`GET /api/hello?name=...`)
 
 ## How it works
 
-- Client: `src/` is a Vite + React app. `src/App.tsx` uses `hc()` to call the API.
-- API: `functions/api/[[route]].ts` is a Cloudflare Pages Function with Hono + zod‑validator.
-- Dev: `wrangler pages dev pages --proxy 5173` serves the built dir (`pages`) and proxies asset requests to Vite. Functions run locally.
-- Build: `vite build` outputs to `pages/` (configured in `vite.config.ts`).
+- Dev orchestration: `scripts/dev.js`
+	- Runs `vite build --watch` (outputs to `./pages`)
+	- After the first successful build, starts `wrangler pages dev pages --port 8787`
+	- Keeps watching for changes and auto-opens the browser when ready
+- Build output: `vite.config.ts` sets `build.outDir = "./pages"`
+- API + Client run together under Wrangler Pages dev
 
 ## Build and deploy
 
@@ -35,9 +45,12 @@ npm -w pages-stack run build
 npm -w pages-stack run deploy
 ```
 
-This builds to `pages/` and deploys to Cloudflare Pages.
+This builds to `./pages` and deploys to Cloudflare Pages.
 
-## Notes
+## Notes & troubleshooting
 
-- No environment variables required for local dev.
-- The `test` script is a no‑op provided for workspace convenience.
+- Requirements: Node 18+ (for built-in `fetch` used by the dev script) and npm.
+- No environment variables are needed for local dev.
+- If the browser doesn’t open automatically, navigate to http://localhost:8787/ manually.
+- To use a different port: set `PORT` (e.g., `PORT=8788`).
+- The `test` script is a no-op for workspace consistency.
