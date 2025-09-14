@@ -14,5 +14,23 @@
     "stytch-auth"
   ],
   "license": "MIT",
-  "packageManager": "npm@10.0.0"
+  "packageManager": "npm@10.0.0",
+  "overrides": {
+    "vite": {
+      "esbuild": "0.21.5"
+    },
+    "vitest": {
+      "esbuild": "0.21.5"
+    }
+  },
+  "scripts": {
+    "postinstall": "node scripts/ensure-workerd-binary.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.21.5"
+  },
+  "dependencies": {
+    "@cloudflare/workerd-darwin-arm64": "^1.20240512.0",
+    "@rollup/rollup-darwin-arm64": "^4.50.1"
+  }
 }

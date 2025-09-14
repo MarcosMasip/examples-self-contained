@@ -2,8 +2,9 @@
   "name": "durable-objects",
   "version": "0.0.1",
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy src/index.ts"
+    "dev": "wrangler dev src/index.ts --local",
+    "deploy": "wrangler deploy src/index.ts",
+    "test": "echo 'No tests for durable-objects yet. Use \"npm run dev\" and the browser UI.'"
   },
   "license": "MIT",
   "dependencies": {
@@ -11,6 +12,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240405.0",
-    "wrangler": "^3.50.0"
+    "wrangler": "^3.53.0"
   }
 }
