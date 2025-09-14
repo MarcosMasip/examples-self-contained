@@ -40,8 +40,9 @@ function ensurePlatformPackage(pkgDir, packageToPlatform) {
     log(`No optional version listed for ${name}; skipping`)
     return
   }
-  const nodeModulesName = name.replace('@', '').replace('/', '%2f')
-  const installedPath = path.join(root, 'node_modules', nodeModulesName)
+  // Build node_modules path supporting scoped packages (e.g., @cloudflare/workerd-darwin-arm64)
+  const parts = name.startsWith('@') ? name.split('/') : [name]
+  const installedPath = path.join(root, 'node_modules', ...parts)
   if (fs.existsSync(installedPath)) {
     log(`${name} already present`)
     return
@@ -59,6 +60,13 @@ const isWin = process.platform === 'win32'
 const isDarwin = process.platform === 'darwin'
 const isLinux = process.platform === 'linux'
 const arch = process.arch
+// Basic musl detection: if glibc runtime version is absent in Node report, assume musl (e.g., Alpine)
+let isMusl = false
+try {
+  const rep = process.report && typeof process.report.getReport === 'function' ? process.report.getReport() : null
+  const glibc = rep && rep.header && rep.header.glibcVersionRuntime
+  isMusl = isLinux && !glibc
+} catch {}
 
 // workerd
 ensurePlatformPackage('workerd', (opt) => {
@@ -71,7 +79,10 @@ ensurePlatformPackage('workerd', (opt) => {
 // rollup
 ensurePlatformPackage('rollup', (opt) => {
   if (isDarwin) return arch === 'arm64' ? '@rollup/rollup-darwin-arm64' : '@rollup/rollup-darwin-x64'
-  if (isLinux) return arch === 'arm64' ? '@rollup/rollup-linux-arm64-gnu' : '@rollup/rollup-linux-x64-gnu'
+  if (isLinux) {
+    if (arch === 'arm64') return isMusl ? '@rollup/rollup-linux-arm64-musl' : '@rollup/rollup-linux-arm64-gnu'
+    if (arch === 'x64') return isMusl ? '@rollup/rollup-linux-x64-musl' : '@rollup/rollup-linux-x64-gnu'
+  }
   if (isWin) return arch === 'arm64' ? '@rollup/rollup-win32-arm64-msvc' : '@rollup/rollup-win32-x64-msvc'
   return null
 })
