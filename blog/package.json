@@ -2,7 +2,7 @@
   "name": "blog",
   "version": "0.0.1",
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
+    "dev": "wrangler dev src/index.ts --local",
     "deploy": "wrangler deploy src/index.ts",
     "test": "vitest --run"
   },

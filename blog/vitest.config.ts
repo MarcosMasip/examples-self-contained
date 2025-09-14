@@ -5,7 +5,8 @@ export default defineWorkersConfig({
     poolOptions: {
       workers: {
         isolatedStorage: false,
-        wrangler: { configPath: './wrangler.toml' }
+        // Use the example Wrangler config for tests to provide bindings like KV
+        wrangler: { configPath: './wrangler.example.toml' }
       }
     }
   }
