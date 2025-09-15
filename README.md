@@ -1,67 +1,87 @@
-# Hono Examples
+# Self‑contained Hono Examples
 
-This repository contains examples that use [Hono](https://hono.dev).
+One‑command, local‑first demos using Hono across Workers, Pages, Next.js, Deno, and Bun.
 
-## Included Examples
+## Why this repo? How it differs from the original
 
-- [basic](./basic/) - basic usage of routing, middleware, and `Context`
-- [blog](./blog/) - CRUD example
-- [durable-objects](./durable-objects/) - simple example with Cloudflare Durable Objects
-- [env-vars](./env-vars/) - example using environment variables with Hono in Typescript: `Bindings` & `Variables`
-- [jsx-ssr](./jsx-ssr/) - JSX Server Side Rendering with `JSX` Middleware
-- [hono-vite-jsx](./hono-vite-jsx/) - Example of using `hono/jsx/dom` with `vite`
-- [serve-static](./serve-static/) - example of serving static files using Cloudflare Workers
-- [deno](./deno/) - Deno example
-- [bun](./bun/) - Bun example
-- [pages-stack](./pages-stack/) - Zod + Zod Validator + `hc` + React on Cloudflare Pages
-- [stytch-auth](./stytch-auth) - TODO App built with Stytch Auth + Cloudflare Workers + `vite`
+These examples are redesigned to be fully self‑contained and easy to try locally:
 
-## Running Examples
+- Single command to run each example; no external accounts or secrets required by default.
+- Browser‑first: a simple landing or UI so you can click around immediately.
+- Local mocks and fallbacks (e.g., in‑memory KV, mock auth flow) to avoid setup hurdles.
+- Better ergonomics: stable local URLs where helpful, and auto‑opening browser for some examples.
+- Monorepo stays green via no‑op test scripts where actual tests aren’t provided.
 
-Install dependencies
+Compared to the original Hono examples, this repo prioritizes quick, local demos with consistent DX and no‑secrets defaults. You can still opt into real services (KV, Stytch, etc.) when you want to go beyond local.
+
+## Quickstart
+
+Requirements
+
+- Node.js 18+ and npm 10+
+- macOS/Windows/Linux supported
+- Deno and Bun are optional (only needed for those folders)
+
+Install dependencies once at the root:
 
 ```bash
 npm install
 ```
 
-For running the examples, run the below command and replace `[workspace]` with the example name.
+Run any example (the dev URL prints in the terminal):
 
 ```bash
-npm -w [workspace] run dev
+npm -w <workspace> run dev
 ```
 
-Or if you have cloned a specific example, you can follow the instructions in the example's README.
+## Examples and how to run
 
-### For deno examples
+- basic — Minimal Worker with routes and middleware
+	- Run: `npm -w basic run dev`
+- blog — CRUD API + simple UI; uses in‑memory storage locally
+	- Run: `npm -w blog run dev`
+- durable-objects — Counter Durable Object + UI
+	- Run: `npm -w durable-objects run dev`
+- env-vars — API client from env; local mock client provided in dev
+	- Run: `npm -w env-vars run dev`
+- serve-static — Serve static assets with a landing page/preview
+	- Run: `npm -w serve-static run dev`
+- jsx-ssr — Server‑rendered JSX via Hono
+	- Run: `npm -w jsx-ssr run dev`
+- hono-vite-jsx — Hono + Vite + hono/jsx/dom with a tiny API
+	- Run: `npm -w hono-vite-jsx run dev`
+- pages-stack — Cloudflare Pages: React client + Hono Functions + Zod; one‑command orchestrator; stable URL and auto‑open
+	- Run: `npm -w pages-stack run dev` → http://localhost:8787/
+- nextjs-stack — Next.js + Hono API route; one‑command dev
+	- Run: `npm -w nextjs-stack run dev` → http://localhost:3000/
+- stytch-auth — TODO app with Stytch auth; runs in mock‑auth locally (no secrets), real auth optional
+	- Run: `npm -w stytch-auth run dev` → http://localhost:3000/
 
-```bash
-deno run --allow-net hello.ts
-```
+## Deno (standalone, optional)
 
-or allow to read files on local disk:
+- Minimal API:
+	- `deno run -A deno/main.ts` → http://localhost:8000/
+- JSX + static:
+	- Simplest: `deno run -A deno/jsx.tsx`
+	- Strict: `deno run --allow-net=0.0.0.0:8000 --allow-read=deno/public deno/jsx.tsx`
 
-```bash
-deno run --allow-net --allow-read jsx.tsx
-```
+## Bun (standalone, optional)
 
-### For bun examples
+- Install: macOS `brew install bun` or all OS `curl -fsSL https://bun.sh/install | bash`
+- Minimal API:
+	- `cd bun && bun install && bun run hello.ts` → http://localhost:3000/
+- JSX + static:
+	- `cd bun && bun install && bun run jsx.tsx` → http://localhost:3000/
+	- Change port:
+		- macOS/Linux: `PORT=8787 bun run jsx.tsx`
+		- Windows PowerShell: `$Env:PORT=8787; bun run jsx.tsx`
 
-Install dependencies
+## Tips & troubleshooting
 
-```bash
-bun install
-```
+- If a port is busy, set PORT (when supported) or stop the other process.
+- Workers/Pages examples print a dev URL in the terminal; pages‑stack uses a stable 8787.
+- Some examples default to local in‑memory storage in dev to avoid external services.
 
-Run the example
+Author: Yusuke Wada — https://github.com/yusukebe
 
-```bash
-bun run hello.ts
-```
-
-## Author
-
-Yusuke Wada https://github.com/yusukebe
-
-## License
-
-Distributed under the MIT License.
+License: MIT
